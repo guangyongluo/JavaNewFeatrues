@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class LambdaTest {
 
@@ -93,5 +94,58 @@ public class LambdaTest {
         for(User user : list){
             System.out.println(user);
         }
+    }
+
+    //lambda表达式-无参无返回值
+    @Test
+    public void test5(){
+        Runnable runnable = () -> System.out.println("hello world");
+        runnable.run();
+
+        Runnable runnable1 = new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("hello world");
+            }
+        };
+
+        runnable1.run();
+    }
+
+    //lambda表达式-有参无返回值
+    @Test
+    public void test6(){
+        Consumer<String> consumer = (x) -> System.out.println(x);
+
+    }
+
+    //lambda表达式-有参无返回值，如果只有一个参数，参数的小括号可以省略
+    @Test
+    public void test7(){
+        Consumer<String> consumer = x -> System.out.println(x);
+    }
+
+    //lambda表达式，有多个参数且有返回值
+    @Test
+    public void test8(){
+        Comparator<Integer> comparator = (x, y) -> {
+          return Integer.compare(x, y);
+        };
+
+        System.out.println(comparator.compare(12, 11));
+    }
+
+    //lambda表达式，有多个参数且有返回值,但是只有一行代码的话，花括号可以省略
+    @Test
+    public void test9(){
+        Comparator<Integer> comparator = (x, y) -> Integer.compare(x, y);
+
+        System.out.println(comparator.compare(12, 11));
+    }
+
+    //lambda表达式，
+    @Test
+    public void test10(){
+
     }
 }
