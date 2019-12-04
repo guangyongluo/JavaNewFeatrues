@@ -1,6 +1,5 @@
 package com.vilin.stream;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class SteamTest {
+public class StreamTest {
 
     private List<User> userList;
 
