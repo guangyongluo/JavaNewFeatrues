@@ -13,6 +13,10 @@ import java.util.function.Consumer;
  * 1. 左右遇一括号省
  * 2. 左侧推断类型省
  * 3. 能省则省
+ *
+ * lambda表达式需要函数接口的支持
+ * 函数式接口：接口中只有一个抽象方法时，称为函数式接口。可以使用注解@FuncationalInterface修饰一下
+ * 可以检查是否是函数式接口
  */
 public class LambdaTest3 {
 
@@ -75,7 +79,7 @@ public class LambdaTest3 {
      * 语法格式五：如果Lambda体中只有一条语句，return和大括号都可以省略不写
      */
     @Test
-    public void test5(){
+    public void topest5(){
         Comparator<Integer> comparator = (x, y) -> Integer.compare(x, y);
         System.out.println(comparator.compare(9, 8));
     }
@@ -89,5 +93,15 @@ public class LambdaTest3 {
 //        strs = {"aaa", "bbb", "ccc"};
 
         List<String> list = new ArrayList<>();
+    }
+
+    //需求：对一个数进行计算
+    public <T> T operation(T num, MyFunction<T> myFunction){
+        return myFunction.getValue(num);
+    }
+
+    @Test
+    public void test7(){
+        System.out.println(operation(100, (x) -> x * x));
     }
 }
