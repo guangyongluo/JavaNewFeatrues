@@ -1,10 +1,13 @@
 package com.vilin.lambda;
 
+import java.util.Objects;
+
 public class Employee {
     private Integer id;
     private Integer age;
     private String name;
     private Double salary;
+    private Status status;
 
     public Employee(){}
 
@@ -19,6 +22,14 @@ public class Employee {
         this.salary = salary;
     }
 
+    public Employee(Integer id, Integer age, String name, Double salary, Status status) {
+        this.id = id;
+        this.age = age;
+        this.name = name;
+        this.salary = salary;
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Employee{" +
@@ -26,6 +37,7 @@ public class Employee {
                 ", age=" + age +
                 ", name='" + name + '\'' +
                 ", salary=" + salary +
+                ", status=" + status +
                 '}';
     }
 
@@ -59,5 +71,30 @@ public class Employee {
 
     public void setSalary(Double salary) {
         this.salary = salary;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee employee = (Employee) o;
+        return Objects.equals(id, employee.id) && Objects.equals(age, employee.age) && Objects.equals(name, employee.name) && Objects.equals(salary, employee.salary);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, age, name, salary);
+    }
+
+    public enum Status{
+        FREE, BUSY, VOCATION;
     }
 }
