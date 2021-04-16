@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 public class TestStream {
 
@@ -33,5 +34,13 @@ public class TestStream {
                 .reduce(Integer::sum);
 
         System.out.println(sum.get());
+    }
+
+    @Test
+    public void test3(){
+        long sum = LongStream.rangeClosed(0, 100000000L)
+                .parallel()
+                .reduce(0, Long::sum);
+        System.out.println(sum);
     }
 }
