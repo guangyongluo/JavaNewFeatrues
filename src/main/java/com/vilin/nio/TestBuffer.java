@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
  * FloatBuffer
  * DoubleBuffer
  *
- * 上述类型的管理方式基本一致，通过allocate()获取缓冲区
+ * 上述类型缓冲区的管理方式基本一致，通过allocate()获取缓冲区
  *
  * 二、缓冲区存取数据的核心方法：
  *
@@ -29,11 +29,15 @@ import java.nio.charset.StandardCharsets;
  *  mark: 标记，可以记录当前position的位置，可以通过reset回到记录的position位置
  *
  *  0 <= mark <= position <= limit <= capacity
+ *
+ *  四、直接缓冲区与非直接缓冲区：
+ *  非直接缓冲区：通过allocate()方法分配缓冲区，将缓冲区建立在JVM的内存中
+ *  直接缓冲区：通过allocateDirect()方法分配直接缓冲区，将缓冲区建立在物理内存中，可以提高效率
  */
 public class TestBuffer {
 
     public static void main(String[] args) {
-        test2();
+        test3();
     }
 
     public static void test(){
@@ -74,15 +78,13 @@ public class TestBuffer {
         System.out.println("buffer.position() = " + buffer.position());
 
         //5. rewind方法，可重复读数据
-
         buffer.rewind();
         System.out.println("======rewind()以后=======");
         System.out.println("buffer.capacity() = " + buffer.capacity());
         System.out.println("buffer.limit() = " + buffer.limit());
         System.out.println("buffer.position() = " + buffer.position());
 
-        //6. clear方法清空缓冲区，缓冲区中的数据依然存在，数据处于被遗忘状态；
-
+        //6. clear方法清空缓冲区，缓冲区中的数据依然存在，数据处于"被遗忘"状态；
         buffer.clear();
         System.out.println("======clear()以后=======");
         System.out.println("buffer.capacity() = " + buffer.capacity());
@@ -121,5 +123,14 @@ public class TestBuffer {
             System.out.println(buffer.remaining());
         }
 
+    }
+
+    public static void test3(){
+        String str = "abcde";
+
+        //分配直接缓冲区
+        ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
+
+        System.out.println(buffer.isDirect());
     }
 }
