@@ -1,14 +1,18 @@
 package com.vilin.nio;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 一、通道(Channel)：用于源节点和目标节点的连接。在Java NIO中负责缓冲区数据的传输。通道(Channel)本身不存储
@@ -36,14 +40,96 @@ import java.nio.file.StandardOpenOption;
  * 四、通道之间的数据传输
  * transferFrom
  * transferTo
- *
- * 五、分数Scatter与聚集Gather
+ * <p>
+ * 五、分数(Scatter)与聚集(Gather)
+ * 分数读取(Scattering Reads) : 将通道中的数据分数到多个缓冲区中；
+ * 聚集写入(Gathering writes) : 将多个缓冲区中的数据聚集到通道中；
+ * <p>
+ * 六、字符集：Charset
+ * 编码：字符串 -> 字节数组
+ * 解码：字节数组 -> 字符串
  */
 
 public class TestChannel {
 
-    public static void main(String[] args) {
-        test3();
+    public static void main(String[] args) throws CharacterCodingException {
+        test6();
+    }
+
+    public static void test6() throws CharacterCodingException {
+        Charset cs1 = Charset.forName("GBK");
+
+        //获取编码器
+        CharsetEncoder ce = cs1.newEncoder();
+
+        //获取解码器
+        CharsetDecoder cd = cs1.newDecoder();
+
+        CharBuffer cBuf = CharBuffer.allocate(1024);
+
+        cBuf.put("我是程序员");
+        cBuf.flip();
+
+        //编码
+        ByteBuffer bBuf = ce.encode(cBuf);
+
+        for(int i = 0; i < 10; i++){
+            System.out.println(bBuf.get());
+        }
+
+        //解码
+        bBuf.flip();
+        CharBuffer cBuf2 = cd.decode(bBuf);
+        System.out.println(cBuf2.toString());
+
+        System.out.println("------------------------------");
+
+        Charset cs2 = Charset.forName("GBK");
+        bBuf.flip();
+        CharBuffer cBuf3 = cs2.decode(bBuf);
+
+        System.out.println(cBuf3.toString());
+
+    }
+
+    //字符集
+    public static void test5() {
+        Map<String, Charset> map = Charset.availableCharsets();
+        Set<Map.Entry<String, Charset>> set = map.entrySet();
+        for (Map.Entry<String, Charset> entry : set) {
+            System.out.println(entry.getKey() + "=" + entry.getValue());
+        }
+
+    }
+
+    //分散和聚集
+    public static void test4() throws IOException {
+        RandomAccessFile raf = new RandomAccessFile("1.txt", "rw");
+
+        //1.获取通道
+        FileChannel channel1 = raf.getChannel();
+
+        //2.分配指定大小的缓冲区
+        ByteBuffer buf1 = ByteBuffer.allocate(100);
+        ByteBuffer buf2 = ByteBuffer.allocate(1024);
+
+        //3.分散读取
+        ByteBuffer[] bufs = {buf1, buf2};
+        channel1.read(bufs);
+
+        for (ByteBuffer byteBuffer : bufs) {
+            byteBuffer.flip();
+        }
+
+        System.out.println(new String(bufs[0].array(), 0, bufs[0].limit()));
+        System.out.println("---------------------");
+        System.out.println(new String(bufs[1].array(), 0, bufs[1].limit()));
+
+        //4.聚集写入
+        RandomAccessFile raf2 = new RandomAccessFile("2.txt", "rw");
+        FileChannel channel2 = raf2.getChannel();
+
+        channel2.write(bufs);
     }
 
     //通道之间的数据传输(直接缓冲区)
