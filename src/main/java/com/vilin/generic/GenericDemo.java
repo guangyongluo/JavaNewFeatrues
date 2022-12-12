@@ -15,4 +15,8 @@ public class GenericDemo<T> {
             System.out.println(item);
         }
     }
+
+    public static void main(String[] args) {
+        Parent.printType(100);
+    }
 }
